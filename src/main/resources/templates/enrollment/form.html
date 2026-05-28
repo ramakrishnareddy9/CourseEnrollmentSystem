@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head><title th:text="${formTitle}">Enrollment Form</title></head>
+<body>
+<div layout:fragment="content" class="content-wrapper">
+
+  <div class="page-header d-flex align-items-center gap-3">
+    <a th:href="@{/enrollments}" class="btn btn-outline-custom py-1 px-2"><i class="bi bi-arrow-left"></i></a>
+    <div>
+      <h1 class="page-title" th:text="${formTitle}">Form</h1>
+      <p class="page-subtitle" th:text="${isEdit} ? 'Update enrollment details' : 'Register a new course enrollment'"></p>
+    </div>
+  </div>
+
+  <form th:action="@{/enrollments/save}" th:object="${enrollment}" method="post" novalidate>
+    <input type="hidden" th:if="${isEdit}" th:field="*{enrollmentId}"/>
+    <input type="hidden" name="isEdit" th:value="${isEdit}"/>
+
+    <!-- Student Info -->
+    <div class="glass-card p-4 mb-4">
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#4f46e5,#818cf8);display:flex;align-items:center;justify-content:center"><i class="bi bi-person-fill text-white fs-6"></i></div>
+        <span class="section-title">Student Information</span>
+      </div>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label-custom" for="studentName">Student Name *</label>
+          <input type="text" th:field="*{studentName}" id="studentName" class="form-control form-control-custom" th:classappend="${#fields.hasErrors('studentName')} ? 'is-invalid'" placeholder="Enter full name"/>
+          <div class="invalid-feedback" th:errors="*{studentName}"></div>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label-custom" for="rollNumber">Roll Number *</label>
+          <input type="text" th:field="*{rollNumber}" id="rollNumber" class="form-control form-control-custom" th:classappend="${#fields.hasErrors('rollNumber')} ? 'is-invalid'" placeholder="e.g. CS2021001"/>
+          <div class="invalid-feedback" th:errors="*{rollNumber}"></div>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label-custom" for="department">Department *</label>
+          <select th:field="*{department}" id="department" class="form-select form-select-custom" th:classappend="${#fields.hasErrors('department')} ? 'is-invalid'">
+            <option value="">Select...</option>
+            <option th:each="d : ${ {'CSE','ECE','EEE','MECH','CIVIL','IT','AIDS','AIML','MBA','MCA'} }" th:value="${d}" th:text="${d}"></option>
+          </select>
+          <div class="invalid-feedback" th:errors="*{department}"></div>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label-custom" for="year">Year *</label>
+          <select th:field="*{year}" id="year" class="form-select form-select-custom" th:classappend="${#fields.hasErrors('year')} ? 'is-invalid'">
+            <option value="">Select...</option>
+            <option value="1">Year 1</option><option value="2">Year 2</option>
+            <option value="3">Year 3</option><option value="4">Year 4</option>
+          </select>
+          <div class="invalid-feedback" th:errors="*{year}"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Course Info -->
+    <div class="glass-card p-4 mb-4">
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#06b6d4,#0891b2);display:flex;align-items:center;justify-content:center"><i class="bi bi-book-fill text-white fs-6"></i></div>
+        <span class="section-title">Course Information</span>
+      </div>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label-custom" for="courseName">Course Name *</label>
+          <input type="text" th:field="*{courseName}" id="courseName" class="form-control form-control-custom" th:classappend="${#fields.hasErrors('courseName')} ? 'is-invalid'" placeholder="e.g. Machine Learning Fundamentals"/>
+          <div class="invalid-feedback" th:errors="*{courseName}"></div>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label-custom" for="courseCategory">Category *</label>
+          <select th:field="*{courseCategory}" id="courseCategory" class="form-select form-select-custom" th:classappend="${#fields.hasErrors('courseCategory')} ? 'is-invalid'">
+            <option value="">Select...</option>
+            <option th:each="c : ${ {'Programming','Data Science','Web Development','Machine Learning','Cloud Computing','Cybersecurity','Database','DevOps','Mobile Development','Soft Skills','Other'} }" th:value="${c}" th:text="${c}"></option>
+          </select>
+          <div class="invalid-feedback" th:errors="*{courseCategory}"></div>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label-custom" for="platformName">Platform *</label>
+          <select th:field="*{platformName}" id="platformName" class="form-select form-select-custom" th:classappend="${#fields.hasErrors('platformName')} ? 'is-invalid'">
+            <option value="">Select...</option>
+            <option th:each="p : ${ {'Coursera','Udemy','edX','NPTEL','LinkedIn Learning','Pluralsight','Codecademy','Khan Academy','Skillshare','Other'} }" th:value="${p}" th:text="${p}"></option>
+          </select>
+          <div class="invalid-feedback" th:errors="*{platformName}"></div>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label-custom" for="enrollmentDate">Enrollment Date *</label>
+          <input type="date" th:field="*{enrollmentDate}" id="enrollmentDate" class="form-control form-control-custom" th:classappend="${#fields.hasErrors('enrollmentDate')} ? 'is-invalid'"/>
+          <div class="invalid-feedback" th:errors="*{enrollmentDate}"></div>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label-custom" for="completionDate">Completion Date</label>
+          <input type="date" th:field="*{completionDate}" id="completionDate" class="form-control form-control-custom" th:classappend="${#fields.hasErrors('completionDate')} ? 'is-invalid'"/>
+          <div class="invalid-feedback" th:errors="*{completionDate}"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress & Scores -->
+    <div class="glass-card p-4 mb-4">
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center"><i class="bi bi-graph-up-arrow text-white fs-6"></i></div>
+        <span class="section-title">Progress &amp; Scores</span>
+        <small class="ms-2" style="color:#64748b;font-size:0.78rem">Progress%, FinalScore, Status &amp; Certificate are auto-calculated</small>
+      </div>
+      <div class="row g-3">
+        <div class="col-md-3">
+          <label class="form-label-custom" for="totalModules">Total Modules *</label>
+          <input type="number" th:field="*{totalModules}" id="totalModules" class="form-control form-control-custom" th:classappend="${#fields.hasErrors('totalModules')} ? 'is-invalid'" min="1" placeholder="e.g. 10"/>
+          <div class="invalid-feedback" th:errors="*{totalModules}"></div>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label-custom" for="completedModules">Completed Modules *</label>
+          <input type="number" th:field="*{completedModules}" id="completedModules" class="form-control form-control-custom" th:classappend="${#fields.hasErrors('completedModules')} ? 'is-invalid'" min="0" placeholder="e.g. 5"/>
+          <div class="invalid-feedback" th:errors="*{completedModules}"></div>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label-custom" for="assignmentScore">Assignment Score (0–100) *</label>
+          <input type="number" th:field="*{assignmentScore}" id="assignmentScore" class="form-control form-control-custom" th:classappend="${#fields.hasErrors('assignmentScore')} ? 'is-invalid'" min="0" max="100" step="0.01" placeholder="e.g. 85.5"/>
+          <div class="invalid-feedback" th:errors="*{assignmentScore}"></div>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label-custom" for="quizScore">Quiz Score (0–100) *</label>
+          <input type="number" th:field="*{quizScore}" id="quizScore" class="form-control form-control-custom" th:classappend="${#fields.hasErrors('quizScore')} ? 'is-invalid'" min="0" max="100" step="0.01" placeholder="e.g. 78.0"/>
+          <div class="invalid-feedback" th:errors="*{quizScore}"></div>
+        </div>
+      </div>
+
+      <!-- Computed fields read-only in edit mode -->
+      <div th:if="${isEdit}" class="row g-3 mt-1">
+        <div class="col-md-3">
+          <label class="form-label-custom">Progress % (Computed)</label>
+          <input type="text" readonly class="form-control form-control-custom" style="opacity:0.55;cursor:not-allowed" th:value="${#numbers.formatDecimal(enrollment.progressPercentage,1,1)} + ' %'"/>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label-custom">Final Score (Computed)</label>
+          <input type="text" readonly class="form-control form-control-custom" style="opacity:0.55;cursor:not-allowed" th:value="${#numbers.formatDecimal(enrollment.finalScore,1,2)}"/>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label-custom">Course Status (Computed)</label>
+          <input type="text" readonly class="form-control form-control-custom" style="opacity:0.55;cursor:not-allowed" th:value="${enrollment.courseStatus}"/>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label-custom">Certificate (Computed)</label>
+          <input type="text" readonly class="form-control form-control-custom" style="opacity:0.55;cursor:not-allowed" th:value="${enrollment.certificateStatus}"/>
+        </div>
+      </div>
+
+      <div th:unless="${isEdit}" class="mt-3 p-3 rounded-3" style="background:rgba(79,70,229,0.08);border:1px solid rgba(79,70,229,0.2)">
+        <div class="d-flex align-items-start gap-2">
+          <i class="bi bi-info-circle-fill" style="color:var(--primary-light);margin-top:2px"></i>
+          <div style="font-size:0.83rem;color:#94a3b8">
+            <strong style="color:#a5b4fc">Auto-Calculated:</strong>
+            Progress% = (Completed/Total)×100 &nbsp;|&nbsp;
+            Final Score = (Assignment×0.6)+(Quiz×0.4) &nbsp;|&nbsp;
+            Status &amp; Certificate set automatically on save.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex gap-3 justify-content-end">
+      <a th:href="@{/enrollments}" class="btn btn-outline-custom px-4"><i class="bi bi-x-lg me-1"></i> Cancel</a>
+      <button type="submit" class="btn btn-primary-custom px-5">
+        <i class="bi bi-floppy me-1"></i>
+        <span th:text="${isEdit} ? 'Update Enrollment' : 'Save Enrollment'"></span>
+      </button>
+    </div>
+  </form>
+</div>
+</body>
+</html>

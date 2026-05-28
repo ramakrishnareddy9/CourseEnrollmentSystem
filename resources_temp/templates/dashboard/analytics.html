@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head><title>Analytics Dashboard</title></head>
+<body>
+<div layout:fragment="content" class="content-wrapper">
+
+  <!-- Page Header -->
+  <div class="page-header d-flex align-items-center justify-content-between flex-wrap gap-3">
+    <div>
+      <h1 class="page-title"><i class="bi bi-bar-chart-line me-2"></i>Course Enrollment Analytics</h1>
+      <p class="page-subtitle">Real-time insights generated from all enrollment records</p>
+    </div>
+    <a th:href="@{/enrollments}" class="btn btn-outline-custom">
+      <i class="bi bi-table me-1"></i> View Enrollments
+    </a>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SECTION 1 — Summary Cards                                  -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="row g-3 mb-4">
+    <!-- Total -->
+    <div class="col-xl-2 col-md-4 col-6">
+      <div class="glass-card p-3 h-100" style="border-top:3px solid #4f46e5">
+        <div style="color:#64748b;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em">Total Enrollments</div>
+        <div style="font-size:2.2rem;font-weight:800;color:#e2e8f0;line-height:1.2" th:text="${analytics.totalEnrollments}">0</div>
+        <i class="bi bi-people-fill" style="color:#4f46e5;font-size:1.4rem"></i>
+      </div>
+    </div>
+    <!-- Completed -->
+    <div class="col-xl-2 col-md-4 col-6">
+      <div class="glass-card p-3 h-100" style="border-top:3px solid #10b981">
+        <div style="color:#64748b;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em">Completed</div>
+        <div style="font-size:2.2rem;font-weight:800;color:#34d399;line-height:1.2" th:text="${analytics.completedCourses}">0</div>
+        <i class="bi bi-check-circle-fill" style="color:#10b981;font-size:1.4rem"></i>
+      </div>
+    </div>
+    <!-- In Progress -->
+    <div class="col-xl-2 col-md-4 col-6">
+      <div class="glass-card p-3 h-100" style="border-top:3px solid #f59e0b">
+        <div style="color:#64748b;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em">In Progress</div>
+        <div style="font-size:2.2rem;font-weight:800;color:#fcd34d;line-height:1.2" th:text="${analytics.inProgressCourses}">0</div>
+        <i class="bi bi-hourglass-split" style="color:#f59e0b;font-size:1.4rem"></i>
+      </div>
+    </div>
+    <!-- Not Started -->
+    <div class="col-xl-2 col-md-4 col-6">
+      <div class="glass-card p-3 h-100" style="border-top:3px solid #64748b">
+        <div style="color:#64748b;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em">Not Started</div>
+        <div style="font-size:2.2rem;font-weight:800;color:#94a3b8;line-height:1.2" th:text="${analytics.notStartedCourses}">0</div>
+        <i class="bi bi-clock" style="color:#64748b;font-size:1.4rem"></i>
+      </div>
+    </div>
+    <!-- Certificate Eligible -->
+    <div class="col-xl-2 col-md-4 col-6">
+      <div class="glass-card p-3 h-100" style="border-top:3px solid #06b6d4">
+        <div style="color:#64748b;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em">Cert. Eligible</div>
+        <div style="font-size:2.2rem;font-weight:800;color:#22d3ee;line-height:1.2" th:text="${analytics.certificateEligible}">0</div>
+        <i class="bi bi-patch-check-fill" style="color:#06b6d4;font-size:1.4rem"></i>
+      </div>
+    </div>
+    <!-- Not Eligible -->
+    <div class="col-xl-2 col-md-4 col-6">
+      <div class="glass-card p-3 h-100" style="border-top:3px solid #ef4444">
+        <div style="color:#64748b;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em">Not Eligible</div>
+        <div style="font-size:2.2rem;font-weight:800;color:#f87171;line-height:1.2" th:text="${analytics.notEligible}">0</div>
+        <i class="bi bi-x-circle-fill" style="color:#ef4444;font-size:1.4rem"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SECTION 2 — Computed Metrics                               -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="glass-card p-4 mb-4">
+    <div class="d-flex align-items-center gap-2 mb-4">
+      <i class="bi bi-calculator-fill" style="color:var(--primary-light);font-size:1.1rem"></i>
+      <span class="section-title">Computed Metrics</span>
+    </div>
+    <div class="row g-3">
+      <div class="col-lg col-md-4 col-6">
+        <div class="p-3 rounded-3 text-center" style="background:rgba(79,70,229,0.1);border:1px solid rgba(79,70,229,0.2)">
+          <div style="font-size:1.7rem;font-weight:800;background:var(--gradient-hero);-webkit-background-clip:text;-webkit-text-fill-color:transparent"
+               th:text="${analytics.avgProgressPercentage} + '%'">0%</div>
+          <div style="color:#64748b;font-size:0.75rem;text-transform:uppercase">Avg Progress</div>
+        </div>
+      </div>
+      <div class="col-lg col-md-4 col-6">
+        <div class="p-3 rounded-3 text-center" style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2)">
+          <div style="font-size:1.7rem;font-weight:800;color:#34d399" th:text="${analytics.avgFinalScore}">0</div>
+          <div style="color:#64748b;font-size:0.75rem;text-transform:uppercase">Avg Final Score</div>
+        </div>
+      </div>
+      <div class="col-lg col-md-4 col-6">
+        <div class="p-3 rounded-3 text-center" style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.2)">
+          <div style="font-size:1.7rem;font-weight:800;color:#fbbf24" th:text="${analytics.highestFinalScore}">0</div>
+          <div style="color:#64748b;font-size:0.75rem;text-transform:uppercase">Highest Score</div>
+        </div>
+      </div>
+      <div class="col-lg col-md-4 col-6">
+        <div class="p-3 rounded-3 text-center" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2)">
+          <div style="font-size:1.7rem;font-weight:800;color:#f87171" th:text="${analytics.lowestFinalScoreAmongCompleted}">0</div>
+          <div style="color:#64748b;font-size:0.75rem;text-transform:uppercase">Lowest (Completed)</div>
+        </div>
+      </div>
+      <div class="col-lg col-md-4 col-6">
+        <div class="p-3 rounded-3 text-center" style="background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.2)">
+          <div style="font-size:1rem;font-weight:700;color:#22d3ee;padding:0.4rem 0" th:text="${analytics.platformWithMostEligible}">—</div>
+          <div style="color:#64748b;font-size:0.75rem;text-transform:uppercase">Top Platform (Eligible)</div>
+        </div>
+      </div>
+      <div class="col-lg col-md-4 col-6">
+        <div class="p-3 rounded-3 text-center" style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2)">
+          <div style="font-size:1.7rem;font-weight:800;color:#c4b5fd" th:text="${analytics.percentageCompleted} + '%'">0%</div>
+          <div style="color:#64748b;font-size:0.75rem;text-transform:uppercase">% Completed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SECTION 3 — Distribution Tables (4 across)                -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="row g-4 mb-4">
+
+    <!-- Department-wise Count -->
+    <div class="col-lg-3 col-md-6">
+      <div class="glass-card p-4 h-100">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <i class="bi bi-building" style="color:#818cf8"></i>
+          <span class="section-title" style="font-size:0.9rem">Department-wise</span>
+        </div>
+        <div th:if="${analytics.departmentWiseCount.isEmpty()}" style="color:#64748b;font-size:0.85rem">No data</div>
+        <div th:each="entry : ${analytics.departmentWiseCount}" class="d-flex justify-content-between align-items-center mb-2">
+          <span style="color:#94a3b8;font-size:0.85rem" th:text="${entry.key}"></span>
+          <div class="d-flex align-items-center gap-2 flex-grow-1 mx-3">
+            <div class="progress progress-custom flex-grow-1">
+              <div class="progress-bar progress-bar-custom" role="progressbar"
+                   th:style="'width:' + (${analytics.totalEnrollments} > 0 ? (${entry.value} * 100 / ${analytics.totalEnrollments}) : 0) + '%'"></div>
+            </div>
+          </div>
+          <span class="badge-custom badge-eligible" th:text="${entry.value}"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Year-wise Count -->
+    <div class="col-lg-3 col-md-6">
+      <div class="glass-card p-4 h-100">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <i class="bi bi-calendar3" style="color:#fcd34d"></i>
+          <span class="section-title" style="font-size:0.9rem">Year-wise</span>
+        </div>
+        <div th:if="${analytics.yearWiseCount.isEmpty()}" style="color:#64748b;font-size:0.85rem">No data</div>
+        <div th:each="entry : ${analytics.yearWiseCount}" class="d-flex justify-content-between align-items-center mb-2">
+          <span style="color:#94a3b8;font-size:0.85rem" th:text="'Year ' + ${entry.key}"></span>
+          <div class="d-flex align-items-center gap-2 flex-grow-1 mx-3">
+            <div class="progress progress-custom flex-grow-1">
+              <div class="progress-bar" style="background:linear-gradient(90deg,#f59e0b,#fbbf24);border-radius:999px"
+                   th:style="'width:' + (${analytics.totalEnrollments} > 0 ? (${entry.value} * 100 / ${analytics.totalEnrollments}) : 0) + '%'"></div>
+            </div>
+          </div>
+          <span class="badge-custom badge-inprogress" th:text="${entry.value}"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category-wise Count -->
+    <div class="col-lg-3 col-md-6">
+      <div class="glass-card p-4 h-100">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <i class="bi bi-tags-fill" style="color:#34d399"></i>
+          <span class="section-title" style="font-size:0.9rem">Category-wise</span>
+        </div>
+        <div th:if="${analytics.categoryWiseCount.isEmpty()}" style="color:#64748b;font-size:0.85rem">No data</div>
+        <div th:each="entry : ${analytics.categoryWiseCount}" class="d-flex justify-content-between align-items-center mb-2">
+          <span style="color:#94a3b8;font-size:0.83rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px" th:text="${entry.key}"></span>
+          <div class="d-flex align-items-center gap-2 flex-grow-1 mx-3">
+            <div class="progress progress-custom flex-grow-1">
+              <div class="progress-bar" style="background:linear-gradient(90deg,#10b981,#34d399);border-radius:999px"
+                   th:style="'width:' + (${analytics.totalEnrollments} > 0 ? (${entry.value} * 100 / ${analytics.totalEnrollments}) : 0) + '%'"></div>
+            </div>
+          </div>
+          <span class="badge-custom badge-completed" th:text="${entry.value}"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Platform-wise Count -->
+    <div class="col-lg-3 col-md-6">
+      <div class="glass-card p-4 h-100">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <i class="bi bi-laptop-fill" style="color:#22d3ee"></i>
+          <span class="section-title" style="font-size:0.9rem">Platform-wise</span>
+        </div>
+        <div th:if="${analytics.platformWiseCount.isEmpty()}" style="color:#64748b;font-size:0.85rem">No data</div>
+        <div th:each="entry : ${analytics.platformWiseCount}" class="d-flex justify-content-between align-items-center mb-2">
+          <span style="color:#94a3b8;font-size:0.83rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px" th:text="${entry.key}"></span>
+          <div class="d-flex align-items-center gap-2 flex-grow-1 mx-3">
+            <div class="progress progress-custom flex-grow-1">
+              <div class="progress-bar" style="background:linear-gradient(90deg,#06b6d4,#22d3ee);border-radius:999px"
+                   th:style="'width:' + (${analytics.totalEnrollments} > 0 ? (${entry.value} * 100 / ${analytics.totalEnrollments}) : 0) + '%'"></div>
+            </div>
+          </div>
+          <span class="badge-custom badge-eligible" th:text="${entry.value}"></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SECTION 4 — Department-wise Learning Performance Table     -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="glass-card mb-4">
+    <div class="p-4 pb-2 d-flex align-items-center gap-2">
+      <i class="bi bi-table" style="color:var(--primary-light);font-size:1.1rem"></i>
+      <span class="section-title">Department-wise Learning Performance</span>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-dark-custom mb-0">
+        <thead>
+          <tr>
+            <th>Department</th>
+            <th class="text-center">Total</th>
+            <th class="text-center">Completed</th>
+            <th class="text-center">In Progress</th>
+            <th class="text-center">Cert. Eligible</th>
+            <th class="text-center">Avg Progress</th>
+            <th class="text-center">Avg Final Score</th>
+            <th class="text-center">Completion %</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:if="${analytics.deptPerformanceList.isEmpty()}">
+            <td colspan="8" class="text-center py-4" style="color:#64748b">No department data available</td>
+          </tr>
+          <tr th:each="d : ${analytics.deptPerformanceList}">
+            <td>
+              <div style="font-weight:600;color:#e2e8f0" th:text="${d.department}"></div>
+            </td>
+            <td class="text-center" style="font-weight:700" th:text="${d.totalEnrollments}"></td>
+            <td class="text-center">
+              <span class="badge-custom badge-completed" th:text="${d.completedCourses}"></span>
+            </td>
+            <td class="text-center">
+              <span class="badge-custom badge-inprogress" th:text="${d.inProgressCourses}"></span>
+            </td>
+            <td class="text-center">
+              <span class="badge-custom badge-eligible" th:text="${d.certificateEligible}"></span>
+            </td>
+            <td class="text-center">
+              <div class="d-flex align-items-center gap-2 justify-content-center">
+                <div class="progress progress-custom" style="width:70px">
+                  <div class="progress-bar progress-bar-custom"
+                       th:style="'width:' + ${d.avgProgressPercentage} + '%'"></div>
+                </div>
+                <small th:text="${#numbers.formatDecimal(d.avgProgressPercentage,1,1)} + '%'" style="color:#94a3b8;font-size:0.78rem"></small>
+              </div>
+            </td>
+            <td class="text-center" style="font-weight:600;color:#e2e8f0" th:text="${#numbers.formatDecimal(d.avgFinalScore,1,2)}"></td>
+            <td class="text-center">
+              <span th:text="${#numbers.formatDecimal(d.completionPercentage,1,1)} + '%'"
+                    th:style="'font-weight:700;color:' + (${d.completionPercentage} >= 75 ? '#34d399' : (${d.completionPercentage} >= 40 ? '#fcd34d' : '#f87171'))"></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <!-- SECTION 5 — Top 5 Students Leaderboard                    -->
+  <!-- ══════════════════════════════════════════════════════════ -->
+  <div class="glass-card">
+    <div class="p-4 pb-2 d-flex align-items-center gap-2">
+      <i class="bi bi-trophy-fill" style="color:#fbbf24;font-size:1.1rem"></i>
+      <span class="section-title">Top 5 Students Leaderboard</span>
+      <small class="ms-2" style="color:#64748b;font-size:0.77rem">Ranked by Final Score → Progress% → Quiz Score</small>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-dark-custom mb-0">
+        <thead>
+          <tr>
+            <th style="width:60px">Rank</th>
+            <th>Student</th>
+            <th>Roll No.</th>
+            <th>Department</th>
+            <th>Course</th>
+            <th class="text-center">Final Score</th>
+            <th class="text-center">Progress</th>
+            <th class="text-center">Quiz Score</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Certificate</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:if="${analytics.top5Students.isEmpty()}">
+            <td colspan="11" class="text-center py-4" style="color:#64748b">No student data available</td>
+          </tr>
+          <tr th:each="s : ${analytics.top5Students}">
+            <td>
+              <!-- Medal icons for top 3 -->
+              <div class="text-center">
+                <span th:if="${s.rank == 1}" style="font-size:1.3rem">🥇</span>
+                <span th:if="${s.rank == 2}" style="font-size:1.3rem">🥈</span>
+                <span th:if="${s.rank == 3}" style="font-size:1.3rem">🥉</span>
+                <span th:if="${s.rank > 3}" class="badge-custom badge-notstarted"
+                      th:text="'#' + ${s.rank}"></span>
+              </div>
+            </td>
+            <td style="font-weight:600;color:#e2e8f0" th:text="${s.studentName}"></td>
+            <td><code style="color:var(--primary-light);font-size:0.82rem" th:text="${s.rollNumber}"></code></td>
+            <td style="font-size:0.85rem" th:text="${s.department}"></td>
+            <td style="font-size:0.85rem;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" th:text="${s.courseName}"></td>
+            <td class="text-center">
+              <span style="font-size:1.1rem;font-weight:800;color:#f97316" th:text="${s.finalScore}"></span>
+            </td>
+            <td class="text-center">
+              <div class="d-flex align-items-center gap-2 justify-content-center">
+                <div class="progress progress-custom" style="width:60px">
+                  <div class="progress-bar progress-bar-custom" th:style="'width:' + ${s.progressPercentage} + '%'"></div>
+                </div>
+                <small th:text="${s.progressPercentage} + '%'" style="color:#94a3b8;font-size:0.78rem"></small>
+              </div>
+            </td>
+            <td class="text-center" style="font-weight:600" th:text="${s.quizScore}"></td>
+            <td class="text-center">
+              <span class="badge-custom"
+                    th:classappend="${s.courseStatus == 'Completed' ? 'badge-completed' :
+                                    (s.courseStatus == 'In Progress' ? 'badge-inprogress' : 'badge-notstarted')}"
+                    th:text="${s.courseStatus}"></span>
+            </td>
+            <td class="text-center">
+              <span class="badge-custom"
+                    th:classappend="${s.certificateStatus == 'Eligible for Certificate' ? 'badge-eligible' : 'badge-noteligible'}"
+                    th:text="${s.certificateStatus == 'Eligible for Certificate' ? 'Eligible' : 'Not Eligible'}"></span>
+            </td>
+            <td>
+              <span th:if="${s.remarks == 'Top Performer'}" class="badge-custom badge-top">
+                <i class="bi bi-star-fill me-1"></i>Top Performer
+              </span>
+              <span th:unless="${s.remarks == 'Top Performer'}" style="color:#64748b;font-size:0.8rem"
+                    th:text="${(s.remarks != null and !s.remarks.isEmpty()) ? s.remarks : '—'}"></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="p-3 px-4" style="border-top:1px solid var(--border);font-size:0.78rem;color:#475569">
+      Tie-breaking rule: Final Score (DESC) → Progress % (DESC) → Quiz Score (DESC)
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

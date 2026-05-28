@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head><title>Enrollment Details</title></head>
+<body>
+<div layout:fragment="content" class="content-wrapper">
+
+  <div class="page-header d-flex align-items-center gap-3 flex-wrap">
+    <a th:href="@{/enrollments}" class="btn btn-outline-custom py-1 px-2"><i class="bi bi-arrow-left"></i></a>
+    <div class="flex-grow-1">
+      <h1 class="page-title">Enrollment Details</h1>
+      <p class="page-subtitle">Full record for <strong th:text="${enrollment.studentName}" style="color:#e2e8f0"></strong></p>
+    </div>
+    <div class="d-flex gap-2">
+      <a th:href="@{/enrollments/edit/{id}(id=${enrollment.enrollmentId})}" class="btn btn-edit-custom">
+        <i class="bi bi-pencil me-1"></i> Edit
+      </a>
+      <a th:href="@{/enrollments/delete/{id}(id=${enrollment.enrollmentId})}" class="btn btn-danger-custom"
+         onclick="return confirm('Delete this enrollment?')">
+        <i class="bi bi-trash me-1"></i> Delete
+      </a>
+    </div>
+  </div>
+
+  <!-- Status Banner -->
+  <div class="glass-card p-4 mb-4 d-flex align-items-center gap-4 flex-wrap">
+    <div class="text-center px-4" style="border-right:1px solid var(--border)">
+      <div style="font-size:2.5rem;font-weight:800;background:linear-gradient(135deg,#4f46e5,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent"
+           th:text="${#numbers.formatDecimal(enrollment.progressPercentage,1,1)} + '%'"></div>
+      <div style="color:#64748b;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.05em">Progress</div>
+    </div>
+    <div class="text-center px-4" style="border-right:1px solid var(--border)">
+      <div style="font-size:2.5rem;font-weight:800;color:#e2e8f0"
+           th:text="${#numbers.formatDecimal(enrollment.finalScore,1,2)}"></div>
+      <div style="color:#64748b;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.05em">Final Score</div>
+    </div>
+    <div class="px-4" style="border-right:1px solid var(--border)">
+      <span class="badge-custom"
+            th:classappend="${enrollment.courseStatus == 'Completed' ? 'badge-completed' :
+                             (enrollment.courseStatus == 'In Progress' ? 'badge-inprogress' : 'badge-notstarted')}"
+            th:text="${enrollment.courseStatus}" style="font-size:0.9rem;padding:0.45em 1.1em"></span>
+      <div style="color:#64748b;font-size:0.75rem;margin-top:4px;text-transform:uppercase;letter-spacing:0.05em">Course Status</div>
+    </div>
+    <div class="px-4" style="border-right:1px solid var(--border)">
+      <span class="badge-custom"
+            th:classappend="${enrollment.certificateStatus == 'Eligible for Certificate' ? 'badge-eligible' : 'badge-noteligible'}"
+            th:text="${enrollment.certificateStatus}" style="font-size:0.9rem;padding:0.45em 1.1em"></span>
+      <div style="color:#64748b;font-size:0.75rem;margin-top:4px;text-transform:uppercase;letter-spacing:0.05em">Certificate</div>
+    </div>
+    <div class="px-4">
+      <span th:if="${enrollment.remarks == 'Top Performer'}" class="badge-custom badge-top" style="font-size:0.9rem;padding:0.45em 1.1em">
+        <i class="bi bi-star-fill me-1"></i>Top Performer
+      </span>
+      <span th:unless="${enrollment.remarks == 'Top Performer'}" style="color:#64748b"
+            th:text="${(enrollment.remarks != null and !enrollment.remarks.isEmpty()) ? enrollment.remarks : '—'}"></span>
+      <div style="color:#64748b;font-size:0.75rem;margin-top:4px;text-transform:uppercase;letter-spacing:0.05em">Remarks</div>
+    </div>
+    <!-- Progress bar -->
+    <div class="ms-auto flex-grow-1" style="min-width:200px;max-width:340px">
+      <div class="d-flex justify-content-between mb-1">
+        <small style="color:#64748b">Modules Completed</small>
+        <small style="color:#94a3b8" th:text="${enrollment.completedModules} + ' / ' + ${enrollment.totalModules}"></small>
+      </div>
+      <div class="progress progress-custom" style="height:12px">
+        <div class="progress-bar progress-bar-custom" role="progressbar"
+             th:style="'width:' + ${enrollment.progressPercentage} + '%'"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Student Info -->
+    <div class="col-md-6">
+      <div class="glass-card p-4 h-100">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#4f46e5,#818cf8);display:flex;align-items:center;justify-content:center"><i class="bi bi-person-fill text-white fs-6"></i></div>
+          <span class="section-title">Student Information</span>
+        </div>
+        <table class="w-100" style="border-collapse:separate;border-spacing:0 6px">
+          <tr>
+            <td style="color:#64748b;font-size:0.82rem;width:44%;padding:6px 0">Enrollment ID</td>
+            <td style="color:#e2e8f0;font-weight:600" th:text="'#' + ${enrollment.enrollmentId}"></td>
+          </tr>
+          <tr>
+            <td style="color:#64748b;font-size:0.82rem">Student Name</td>
+            <td style="color:#e2e8f0;font-weight:600" th:text="${enrollment.studentName}"></td>
+          </tr>
+          <tr>
+            <td style="color:#64748b;font-size:0.82rem">Roll Number</td>
+            <td><code style="color:var(--primary-light);font-size:0.85rem" th:text="${enrollment.rollNumber}"></code></td>
+          </tr>
+          <tr>
+            <td style="color:#64748b;font-size:0.82rem">Department</td>
+            <td style="color:#e2e8f0" th:text="${enrollment.department}"></td>
+          </tr>
+          <tr>
+            <td style="color:#64748b;font-size:0.82rem">Year</td>
+            <td style="color:#e2e8f0" th:text="'Year ' + ${enrollment.year}"></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Course Info -->
+    <div class="col-md-6">
+      <div class="glass-card p-4 h-100">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#06b6d4,#0891b2);display:flex;align-items:center;justify-content:center"><i class="bi bi-book-fill text-white fs-6"></i></div>
+          <span class="section-title">Course Information</span>
+        </div>
+        <table class="w-100" style="border-collapse:separate;border-spacing:0 6px">
+          <tr>
+            <td style="color:#64748b;font-size:0.82rem;width:44%;padding:6px 0">Course Name</td>
+            <td style="color:#e2e8f0;font-weight:600" th:text="${enrollment.courseName}"></td>
+          </tr>
+          <tr>
+            <td style="color:#64748b;font-size:0.82rem">Category</td>
+            <td style="color:#e2e8f0" th:text="${enrollment.courseCategory}"></td>
+          </tr>
+          <tr>
+            <td style="color:#64748b;font-size:0.82rem">Platform</td>
+            <td style="color:#e2e8f0" th:text="${enrollment.platformName}"></td>
+          </tr>
+          <tr>
+            <td style="color:#64748b;font-size:0.82rem">Enrollment Date</td>
+            <td style="color:#e2e8f0" th:text="${#temporals.format(enrollment.enrollmentDate,'dd MMM yyyy')}"></td>
+          </tr>
+          <tr>
+            <td style="color:#64748b;font-size:0.82rem">Completion Date</td>
+            <td style="color:#e2e8f0"
+                th:text="${enrollment.completionDate != null ? #temporals.format(enrollment.completionDate,'dd MMM yyyy') : '—'}"></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Scores -->
+    <div class="col-12">
+      <div class="glass-card p-4">
+        <div class="d-flex align-items-center gap-2 mb-4">
+          <div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center"><i class="bi bi-graph-up-arrow text-white fs-6"></i></div>
+          <span class="section-title">Progress &amp; Score Details</span>
+        </div>
+        <div class="row g-4 text-center">
+          <div class="col-md-2 col-6">
+            <div style="font-size:1.6rem;font-weight:700;color:#e2e8f0" th:text="${enrollment.totalModules}"></div>
+            <div style="color:#64748b;font-size:0.78rem;text-transform:uppercase">Total Modules</div>
+          </div>
+          <div class="col-md-2 col-6">
+            <div style="font-size:1.6rem;font-weight:700;color:#34d399" th:text="${enrollment.completedModules}"></div>
+            <div style="color:#64748b;font-size:0.78rem;text-transform:uppercase">Completed</div>
+          </div>
+          <div class="col-md-2 col-6">
+            <div style="font-size:1.6rem;font-weight:700;color:#fcd34d" th:text="${#numbers.formatDecimal(enrollment.assignmentScore,1,1)}"></div>
+            <div style="color:#64748b;font-size:0.78rem;text-transform:uppercase">Assignment Score</div>
+          </div>
+          <div class="col-md-2 col-6">
+            <div style="font-size:1.6rem;font-weight:700;color:#60a5fa" th:text="${#numbers.formatDecimal(enrollment.quizScore,1,1)}"></div>
+            <div style="color:#64748b;font-size:0.78rem;text-transform:uppercase">Quiz Score</div>
+          </div>
+          <div class="col-md-2 col-6">
+            <div style="font-size:1.6rem;font-weight:700;background:linear-gradient(135deg,#4f46e5,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent"
+                 th:text="${#numbers.formatDecimal(enrollment.progressPercentage,1,1)} + '%'"></div>
+            <div style="color:#64748b;font-size:0.78rem;text-transform:uppercase">Progress</div>
+          </div>
+          <div class="col-md-2 col-6">
+            <div style="font-size:1.6rem;font-weight:700;color:#f97316" th:text="${#numbers.formatDecimal(enrollment.finalScore,1,2)}"></div>
+            <div style="color:#64748b;font-size:0.78rem;text-transform:uppercase">Final Score</div>
+          </div>
+        </div>
+        <div class="mt-4 p-3 rounded-3" style="background:rgba(255,255,255,0.03);font-size:0.8rem;color:#64748b">
+          Formula: Progress% = (Completed / Total) × 100 &nbsp;|&nbsp;
+          Final Score = (Assignment × 0.6) + (Quiz × 0.4)
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
